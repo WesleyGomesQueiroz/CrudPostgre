@@ -57,6 +57,27 @@ namespace CrudPostgre.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ReadAll")]
+        public List<DepartamentEmployee> ReadAll()
+        {
+            string query = @"select 
+                             	D.DepartamentName as DpName,
+                             	E.EmployeeName as EmpName,
+                             	E.DateOfJoing as DateJoing
+                             from Departament D
+                             inner join Employee E on D.DepartamentName = E.Departament";
+
+            using (var conn = new NpgsqlConnection("Server=localhost;Database=mytestdb;User Id=postgres;Password=anonimo;"))
+            {
+                conn.Open();
+
+                var resp = conn.Query<DepartamentEmployee>(query).ToList();
+
+                return resp;
+            }
+        }
+
         [HttpPut]
         [Route("Update")]
         public void Update(Departament departament)
@@ -91,27 +112,6 @@ namespace CrudPostgre.Controllers
 
                 conn.Query(query, new { DepartamentId = departamentId }).FirstOrDefault();
 
-            }
-        }
-
-        [HttpGet]
-        [Route("ReadAll")]
-        public List<DepartamentEmployee> ReadAll()
-        {
-            string query = @"select 
-                             	D.DepartamentName as DpName,
-                             	E.EmployeeName as EmpName,
-                             	E.DateOfJoing as DateJoing
-                             from Departament D
-                             inner join Employee E on D.DepartamentName = E.Departament";
-
-            using (var conn = new NpgsqlConnection("Server=localhost;Database=mytestdb;User Id=postgres;Password=anonimo;"))
-            {
-                conn.Open();
-
-                var resp = conn.Query<DepartamentEmployee>(query).ToList();
-
-                return resp;
             }
         }
 
